@@ -2,8 +2,17 @@ from fastapi import FastAPI
 from pydantic import BaseModel
 import pymongo
 from bson.json_util import dumps,loads
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=['*'],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
 cli=pymongo.MongoClient("mongodb://mongo:hKkb23G8NtWIezPQe4Cg@containers-us-west-197.railway.app:7613")
 db=cli.workdb.emp
 project=cli.portfolio.project
