@@ -1,10 +1,14 @@
 from fastapi import FastAPI
 from pydantic import BaseModel
 import pymongo
+from bson.json_util import dumps,loads
 
 app = FastAPI()
 cli=pymongo.MongoClient("mongodb://mongo:hKkb23G8NtWIezPQe4Cg@containers-us-west-197.railway.app:7613")
 db=cli.workdb.emp
+project=cli.portfolio.project
+cert=cli.portfolio.certificates
+feed=cli.portfolio.feedback
 
 class Msg(BaseModel):
     msg: str
@@ -81,3 +85,13 @@ def update(name,newname):
     s=db.find({"ename": newname},{'_id':False})
     print(s)
     return loads(dumps(list(s)))
+
+
+# --------------------------------------------------------------------------------------------
+@app.get('/port/prj')
+def proj():
+    return loads(dumps(list(project.find({},{'_id':False}))))
+
+@app.get('/port/ctr')
+def ctr():
+    return loads(dumps(list(cert.find({},{'_id':False}))))
